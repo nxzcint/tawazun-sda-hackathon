@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cluster-ip-service
+  namespace: ahmed-tawazun
+  labels:
+    app: deployapp
+    name: ahmed
+spec:
+  type: ClusterIP
+  ports:
+    - name: sql-port
+      port: 3306
+      targetPort: 3306
+      protocol: TCP
+  selector:
+    app: deployapp
