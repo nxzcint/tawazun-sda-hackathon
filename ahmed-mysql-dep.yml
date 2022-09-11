@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sql
+  namespace: ahmed-tawazun
+  labels:
+    app: deployapp
+    name: ahmed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployapp
+  template:
+    metadata:
+      labels:
+        app: deployapp
+    spec:
+      volumes:
+        - name: sql-pv-claim
+          persistentVolumeClaim:
+            claimName: sql-pv-claim
+      containers:
+        - image: mysql
+          name: mysql
+          args:
+          - /bin/sh
+          - -c
+          - touch /tmp/healthy; 
+          livenessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 5
+          startupProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 1
+            failureThreshold: 5
+          env:
+          - name: MYSQL_USER
+            value: "mysql"
+          - name:  MYSQL_PASSWORD
+            value: "mysql"
+          - name: MYSQL_ROOT_PASSWORD
+            value: "mysql"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: sql-pv-claim
