@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: deploy
+    name: ahmed
+    namespace: ahmed-tawazun
+    type: amazonEBS
+  name: sql-pv-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+  selector:
+    matchLabels:
+      type: amazonEBS
