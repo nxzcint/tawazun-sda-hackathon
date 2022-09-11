@@ -1,0 +1,59 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployapp
+  namespace: ahmed-tawazun
+  labels:
+    app: deployapp
+    service: tawazun-svc
+    name: ahmed
+spec:
+  template:
+    metadata:
+      name: deployapp
+      labels:
+        app: deployapp
+        service: tawazun-svc
+    spec:
+      containers:
+       - name: nginx
+         image: nxzcint/tawazun-sda
+         ports:
+            - containerPort: 8080
+         args:
+          - /bin/sh
+          - -c
+          - touch /tmp/healthy;
+         livenessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 3
+            failureThreshold: 5
+         readinessProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 3
+            failureThreshold: 5
+         startupProbe:
+            exec:
+              command:
+              - cat
+              - /tmp/healthy
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 3
+            failureThreshold: 5
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployapp
+      service: tawazun-svc
